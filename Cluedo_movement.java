@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.HashSet;
 
-public class Cluedo_movement {
+public class Cluedo_movementv2 {
     public static void main(String[] args) {
         // Create a 2D array to represent the board
         Tile[][] board = new Tile[24][24];
@@ -76,8 +76,6 @@ public class Cluedo_movement {
             }
         }
         
-    
-        
 
         // Create 4 players and place them on the board
         List<Player> players = new ArrayList<>();
@@ -97,7 +95,8 @@ public class Cluedo_movement {
             Player currentPlayer = players.get(currentPlayerIndex);
             System.out.println();
             System.out.println("Player " + currentPlayer.getPlayerID() + "'s turn.");
-
+            
+            
             // Roll the dice and get the number of steps to move
             int stepsToMove = (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1);
             System.out.println("You rolled a " + stepsToMove + ". Press Enter to continue...");
@@ -111,15 +110,27 @@ public class Cluedo_movement {
                 // Get the desired movement direction from the player
                 System.out.print("Enter direction (UP/W, DOWN/S, LEFT/A, RIGHT/D): ");
                 String input = scanner.nextLine();
-                board[currentPlayer.getX()][currentPlayer.getY()].setType(' ');
+                //board[currentPlayer.getX()][currentPlayer.getY()].setType(' ');
+                int curX;
+                int curY;
+                String in = input;
+                boolean c = false;
                 if (input.equalsIgnoreCase("UP") || input.equalsIgnoreCase("W")) {
-                    currentPlayer.moveUp();
+                    checkCollisionAndMove(board, currentPlayer, players, currentPlayer.getX(), currentPlayer.getY()-1, input);
+  
+
                 } else if (input.equalsIgnoreCase("DOWN") || input.equalsIgnoreCase("S")) {
-                    currentPlayer.moveDown();
+                    checkCollisionAndMove(board, currentPlayer, players, currentPlayer.getX(), currentPlayer.getY()+1, input);
+
+                    
                 } else if (input.equalsIgnoreCase("LEFT") || input.equalsIgnoreCase("A")) {
-                    currentPlayer.moveLeft();
+                    checkCollisionAndMove(board, currentPlayer, players,currentPlayer.getX()-1, currentPlayer.getY(), input);
+                    
+                    
                 } else if (input.equalsIgnoreCase("RIGHT") || input.equalsIgnoreCase("D")) {
-                    currentPlayer.moveRight();
+                   checkCollisionAndMove(board, currentPlayer, players, currentPlayer.getX()+1, currentPlayer.getY(), input);
+
+                    
                 } else if (input.equalsIgnoreCase("EXIT")) {
                     System.out.println("Exiting the game.");
                     scanner.close();
@@ -130,21 +141,90 @@ public class Cluedo_movement {
                 }
 
                 // Clear the console for better visibility after each movement
-                clearConsole();
+                //clearConsole();
 
                 // Update the player's tile on the board
-                board[currentPlayer.getX()][currentPlayer.getY()].update(currentPlayer.getX(), currentPlayer.getY(), currentPlayer.getPlayerID());
+                //board[currentPlayer.getX()][currentPlayer.getY()].update(currentPlayer.getX(), currentPlayer.getY(), currentPlayer.getPlayerID());
 
                 // Print the updated board
-                printBoard(board, players);
-                System.out.println();
+                //printBoard(board, players);
             }
 
             // Switch to the next player for the next turn
             currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         }
     }
+    /*
+    private static boolean checkCollisionAndMove(Tile[][] board, Player currentPlayer, List<Player> players ,int destX, int destY, String move) {
+        if  (destX >= 0 && destX < 24 && destY >= 0 && destY < 24) {
+            if (board[destX][destY].getType() != ' ') {
+                // do not move the player
+                System.out.println("Collision detected. Choose a different direction.");
+                return false;
+            } else {
+                /*
+                board[currentPlayer.getX()][currentPlayer.getY()].setType(' ');
+                // Move the player to the destination tile
+                
+                System.out.println("Collision NOT detected");
+                clearConsole();
+                if (move.equalsIgnoreCase("UP") || move.equalsIgnoreCase("W")) {
+                    currentPlayer.moveUp();
+                    
+                } else if (move.equalsIgnoreCase("DOWN") || move.equalsIgnoreCase("S")) {
+                     currentPlayer.moveDown();
 
+                } else if (move.equalsIgnoreCase("LEFT") || move.equalsIgnoreCase("A")) {
+                     currentPlayer.moveLeft();
+                   
+                } else if (move.equalsIgnoreCase("RIGHT") || move.equalsIgnoreCase("D")) {
+                    currentPlayer.moveRight();
+                }
+                board[currentPlayer.getX()][currentPlayer.getY()].update(currentPlayer.getX(), currentPlayer.getY(), currentPlayer.getPlayerID());
+                //updated board
+                printBoard(board, players); 
+                return true;
+            }
+        } else {
+            // Destination is out of bounds; do not move the player
+            System.out.println("You cannot move out of bounds. Choose a different direction.");
+            return false;
+        }
+    }  */
+    
+    private static void checkCollisionAndMove(Tile[][] board, Player currentPlayer, List<Player> players, int destX, int destY, String move) {
+        if (destX >= 0 && destX < 24 && destY >= 0 && destY < 24) {
+            if (board[destX][destY].getType() != ' ') {
+                System.out.println("Collision detected. Choose a different direction.");
+            } else {
+                
+                board[currentPlayer.getX()][currentPlayer.getY()].setType(' ');
+    
+                
+                System.out.println("Collision NOT detected");
+                clearConsole();
+                if (move.equalsIgnoreCase("UP") || move.equalsIgnoreCase("W")) {
+                    currentPlayer.moveUp();
+                } else if (move.equalsIgnoreCase("DOWN") || move.equalsIgnoreCase("S")) {
+                    currentPlayer.moveDown();
+                } else if (move.equalsIgnoreCase("LEFT") || move.equalsIgnoreCase("A")) {
+                    currentPlayer.moveLeft();
+                } else if (move.equalsIgnoreCase("RIGHT") || move.equalsIgnoreCase("D")) {
+                    currentPlayer.moveRight();
+                }
+    
+                
+                board[currentPlayer.getX()][currentPlayer.getY()].update(currentPlayer.getX(), currentPlayer.getY(), currentPlayer.getPlayerID());
+    
+                
+                printBoard(board, players);
+
+            }
+        } else {
+            // Destination is out of bounds, do not move the player
+            System.out.println("You cannot move out of bounds. Choose a different direction.");
+        }
+    }
     // Helper method to print the board
     private static void printBoard(Tile[][] board, List<Player> players) {
         System.out.println("<----------------------MAP---------------------->\n");
@@ -261,6 +341,14 @@ class Player {
 
     public void moveRight() {
         x++;
+    }
+    
+    public void setX(int newX){
+        x = newX;
+    }
+    
+    public void setY(int newY){
+        y = newY;
     }
 }
 
