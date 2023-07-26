@@ -1,0 +1,12 @@
+#BlueJ class context
+comment0.target=PlayerCard
+comment0.text=This\ code\ was\ generated\ using\ the\ UMPLE\ 1.32.1.6535.66c005ced\ modeling\ language\!
+comment1.params=aValue\ aName
+comment1.target=PlayerCard(int,\ java.lang.String)
+comment2.params=aType
+comment2.target=boolean\ setType(java.lang.String)
+comment3.params=
+comment3.target=java.lang.String\ getType()
+comment4.params=
+comment4.target=void\ delete()
+numComments=5
